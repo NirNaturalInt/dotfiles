@@ -7,3 +7,5 @@ exclude:
   - tags
   - requirements.txt
   - '.config/karabiner'
+  - .gitconfig
+  - .zshrc
