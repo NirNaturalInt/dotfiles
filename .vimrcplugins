@@ -1,3 +1,4 @@
+scriptencoding utf-8
 " Moshe's plugins and plugin configuration. Complementary to my .vimrc file
 
 " .    .         .              .
@@ -12,7 +13,8 @@ call plug#begin(s:vimplug_dir)
 
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+" Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+" Plug 'tpope/vim-vinegar'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -26,11 +28,13 @@ Plug 'chr4/nginx.vim'
 " Plug 'prominic/groovy-language-server', { 'do': './gradlew build' }
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+      \ 'do': 'yarn install',
+      \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 Plug 'StanAngeloff/php.vim', {'for': ['php']}
 Plug 'rayburgemeestre/phpfolding.vim', {'for': ['php']}
 Plug 'tfnico/vim-gradle'
+Plug 'towolf/vim-helm'
+
 
 Plug 'mogelbrod/vim-jsonpath'
 Plug 'chrisbra/vim-sh-indent'
@@ -56,6 +60,7 @@ Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-easy-align'
 Plug 'AndrewRadev/switch.vim'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'AndrewRadev/sideways.vim'
 
 Plug 'simeji/winresizer'
 Plug 'xolox/vim-session'
@@ -157,12 +162,12 @@ nnoremap <c-b> :Buffers<cr>
 " }}}
 
 " Ultisnip {{{
-let g:UltiSnipsExpandTrigger="<c-s>"
+let g:UltiSnipsExpandTrigger='<c-s>'
 " }}}
 
 " Vim auto pairs {{{
-let g:AutoPairsShortcutJump = ""
-let g:AutoPairsShortcutToggle = ""
+let g:AutoPairsShortcutJump = ''
+let g:AutoPairsShortcutToggle = ''
 " }}}
 
 " Vim json path {{{
@@ -181,21 +186,21 @@ let g:floaterm_keymap_toggle = '<F6>'
 nnoremap \G :ShowDos \G<cr>
 let g:vimdo = {}
 let g:vimdo['\G'] = {
-          \'label' : 'git commands', 'interactive':1, 'arbitrary': 1,
-          \'compact':1, 'keys_width': 8, 'desc_width': 30,
-          \'r':  ['reset', 0, ":echo system('git reset')\<cr>"],
-          \'s':  ['status', 0, ":Gstatus\<cr>"],
-          \'D':  ['diff HEAD', 0, ":Gvsplit! diff HEAD\<cr>:setf git\<cr>:set foldmethod=syntax\<cr>"],
-          \'b':  ['blame', 0, ":Gblame\<cr>"],
-          \'p':  ['push', 0, ":redraw! \<bar> echo 'Pushing...\t' \<bar> echon system('git push')\<cr>"],
-          \'.':  ['add all', 0, ":echo system('git add .').'Git: added .'\<cr>"],
-          \'l':  ['log current file', 0, ":Glog\<cr>"],
-          \'c':  ['commit', 0, ":Gcommit\<cr>"],
-          \'w':  ['stage file', 0, ":Gwrite\<cr>"],
-          \'d':  ['diff with...', 0, ":Gvdiff\<space>"],
-          \'a':  ['amend', 0, ":Gstatus\<cr>ca\<cr>"],
-          \'A':  ['add all and amend', 0, ":call system('git add .')\<cr>:Gcommit --amend\<cr>:q\<cr>"],
-          \}
+      \'label' : 'git commands', 'interactive':1, 'arbitrary': 1,
+      \'compact':1, 'keys_width': 8, 'desc_width': 30,
+      \'r':  ['reset', 0, ":echo system('git reset')\<cr>"],
+      \'s':  ['status', 0, ":Gstatus\<cr>"],
+      \'D':  ['diff HEAD', 0, ":Gvsplit! diff HEAD\<cr>:setf git\<cr>:set foldmethod=syntax\<cr>"],
+      \'b':  ['blame', 0, ":Gblame\<cr>"],
+      \'p':  ['push', 0, ":redraw! \<bar> echo 'Pushing...\t' \<bar> echon system('git push')\<cr>"],
+      \'.':  ['add all', 0, ":echo system('git add .').'Git: added .'\<cr>"],
+      \'l':  ['log current file', 0, ":Glog\<cr>"],
+      \'c':  ['commit', 0, ":Gcommit\<cr>"],
+      \'w':  ['stage file', 0, ":Gwrite\<cr>"],
+      \'d':  ['diff with...', 0, ":Gvdiff\<space>"],
+      \'a':  ['amend', 0, ":Gstatus\<cr>ca\<cr>"],
+      \'A':  ['add all and amend', 0, ":call system('git add .')\<cr>:Gcommit --amend\<cr>:q\<cr>"],
+      \}
 " }}}
 
 " Switch vim {{{
@@ -203,17 +208,22 @@ let g:vimdo['\G'] = {
 " The map switch is between underscores to camelCase: moshe_king -> mosheKing
 " -> moshe_king
 let g:switch_custom_definitions = [
-            \   ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
-            \   ["==", "!="],
-            \   {
-            \     '\<[a-z0-9]\+_\k\+\>': {
-            \       '_\(.\)': '\U\1'
-            \     },
-            \     '\<[a-z0-9]\+[A-Z]\k\+\>': {
-            \       '\([A-Z]\)': '_\l\1'
-            \     },
-            \   }
-            \ ]
+      \   ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
+      \   ['==', '!='],
+      \   {
+      \     '\<[a-z0-9]\+_\k\+\>': {
+      \       '_\(.\)': '\U\1'
+      \     },
+      \     '\<[a-z0-9]\+[A-Z]\k\+\>': {
+      \       '\([A-Z]\)': '_\l\1'
+      \     },
+      \   }
+      \ ]
+" }}}
+
+" Sideways {{{
+nnoremap <leader>h :SidewaysLeft<cr>
+nnoremap <leader>l :SidewaysRight<cr>
 " }}}
 
 " Vim session {{{
@@ -239,7 +249,7 @@ nmap ga <Plug>(EasyAlign)
 " }}}
 
 " Vim close tag {{{
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.erb,*.jsx,*.tsx,*.js"
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.jsx,*.tsx,*.js'
 let g:closetag_filetypes = 'html,xhtml,phtml,javascript,javascriptreact'
 " }}}
 
@@ -251,105 +261,26 @@ let g:VM_maps = {}
 
 " Color settings {{{
 
-" " Vim DevIcons colors {{{
-" let g:sol = {
-"             \"gui": {
-"             \"base03": "#002b36",
-"             \"base02": "#073642",
-"             \"base01": "#586e75",
-"             \"base00": "#657b83",
-"             \"base0": "#839496",
-"             \"base1": "#93a1a1",
-"             \"base2": "#eee8d5",
-"             \"base3": "#fdf6e3",
-"             \"yellow": "#b58900",
-"             \"orange": "#cb4b16",
-"             \"red": "#dc322f",
-"             \"magenta": "#d33682",
-"             \"violet": "#6c71c4",
-"             \"blue": "#268bd2",
-"             \"cyan": "#2aa198",
-"             \"green": "#719e07"
-"             \},
-"             \"cterm": {
-"             \"base03": 8,
-"             \"base02": 0,
-"             \"base01": 10,
-"             \"base00": 11,
-"             \"base0": 12,
-"             \"base1": 14,
-"             \"base2": 7,
-"             \"base3": 15,
-"             \"yellow": 3,
-"             \"orange": 9,
-"             \"red": 1,
-"             \"magenta": 5,
-"             \"violet": 13,
-"             \"blue": 4,
-"             \"cyan": 6,
-"             \"green": 2
-"             \}
-"             \}
-
-" function! DeviconsColors(config)
-"     let colors = keys(a:config)
-"     augroup devicons_colors
-"         autocmd!
-"         for color in colors
-"             if color == 'normal'
-"                 exec 'autocmd FileType nerdtree,startify if &background == ''dark'' | '.
-"                             \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base01.' ctermfg='.g:sol.cterm.base01.' | '.
-"                             \ 'else | '.
-"                             \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base1.' ctermfg='.g:sol.cterm.base1.' | '.
-"                             \ 'endif'
-"             elseif color == 'emphasize'
-"                 exec 'autocmd FileType nerdtree,startify if &background == ''dark'' | '.
-"                             \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base1.' ctermfg='.g:sol.cterm.base1.' | '.
-"                             \ 'else | '.
-"                             \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base01.' ctermfg='.g:sol.cterm.base01.' | '.
-"                             \ 'endif'
-"             else
-"                 exec 'autocmd FileType nerdtree,startify highlight devicons_'.color.' guifg='.g:sol.gui[color].' ctermfg='.g:sol.cterm[color]
-"             endif
-"             exec 'autocmd FileType nerdtree,startify syntax match devicons_'.color.' /\v'.join(a:config[color], '|').'/ containedin=ALL'
-"         endfor
-"     augroup END
-" endfunction
-" let g:devicons_colors = {
-"             \'normal': ['', '', '', '', ''],
-"             \'emphasize': ['', '', '', '', '', '', '', '', '', '', ''],
-"             \'yellow': ['', '', ''],
-"             \'orange': ['', '', '', 'λ', '', ''],
-"             \'red': ['', '', '', '', '', '', '', '', ''],
-"             \'magenta': [''],
-"             \'violet': ['', '', '', ''],
-"             \'blue': ['', '', '', '', '', '', '', '', '', '', '', '', ''],
-"             \'cyan': ['', '', '', ''],
-"             \'green': ['', '', '', '']
-"             \}
-" call DeviconsColors(g:devicons_colors)
-" " }}}
-
 " Vim rainbow {{{
 let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
 " }}}
 
 " Random color {{{
 function! RandomColorChooser() abort
-    let l:liked_colors =  [
-                \ "OceanicNext",
-                \ "apprentice",
-                \ "deep-space",
-                \ "dracula",
-                \ "onedark",
-                \ "onehalfdark",
-                \ "purify",
-                \ "quantum",
-                \ "sonokai",
-                \ "two-firewatch"
-                \ ]
-    let l:random_color = l:liked_colors[localtime() % len(l:liked_colors)]
-    exe 'colorscheme '. l:random_color
+  let l:liked_colors =  [
+        \ 'OceanicNext',
+        \ 'apprentice',
+        \ 'deep-space',
+        \ 'dracula',
+        \ 'onedark',
+        \ 'onehalfdark',
+        \ 'purify',
+        \ 'quantum',
+        \ 'sonokai',
+        \ 'two-firewatch'
+        \ ]
+  let l:random_color = l:liked_colors[localtime() % len(l:liked_colors)]
+  exe 'colorscheme '. l:random_color
 endfunction
 " call RandomColorChooser()
 colorscheme palenight
@@ -449,20 +380,24 @@ let g:lightline#bufferline#filename_modifier = ':t'
 " }}}
 
 " GitGutter {{{
+let g:gitgutter_map_keys = 0
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_highlight_linenrs = 1
 nnoremap <leader>gc :GitGutterLineHighlightsToggle<cr>
 nnoremap <leader>cag :GitGutterFold<cr>
+nmap ]c <Plug>(GitGutterNextHunk)
+nmap [c <Plug>(GitGutterPrevHunk)
 function! GitStatus()
-    let [a,m,r] = GitGutterGetHunkSummary()
-    return printf('+%d ~%d -%d', a, m, r)
+  let [a,m,r] = GitGutterGetHunkSummary()
+  return printf('+%d ~%d -%d', a, m, r)
 endfunction
 set statusline+=%{GitStatus()}
 highlight clear SignColumn
-highlight GitGutterAdd ctermfg=green
-highlight GitGutterChange ctermfg=yellow
-highlight GitGutterDelete ctermfg=red
-highlight GitGutterChangeDelete ctermfg=yellow
+highlight GitGutterAdd    guifg=#009900 ctermfg=2
+highlight GitGutterChange guifg=#ffff61 ctermfg=3
+highlight GitGutterDelete guifg=#ff2222 ctermfg=1
+highlight! link SignColumn LineNr
+
 " }}}
 
 " Fugitive {{{
@@ -471,57 +406,83 @@ highlight GitGutterChangeDelete ctermfg=yellow
 "Delete all Git conflict markers
 "Creates the command :GremoveConflictMarkers
 function! RemoveConflictMarkers() range
-    echom a:firstline.'-'.a:lastline
-    execute a:firstline.','.a:lastline . ' g/^<\{7}\|^|\{7}\|^=\{7}\|^>\{7}/d'
+  echom a:firstline.'-'.a:lastline
+  execute a:firstline.','.a:lastline . ' g/^<\{7}\|^|\{7}\|^=\{7}\|^>\{7}/d'
 endfunction
 "-range=% default is whole file
 command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
 
 
 " Better branch choosing using :Gbranch
-function! s:changebranch(branch)
-    execute 'Git checkout ' . a:branch
-    call feedkeys("i")
+function! s:changebranch(...)
+  let name = a:1
+  if name ==? ''
+    call inputsave()
+    let name = input('Enter branch name: ')
+    call inputrestore()
+  endif
+  execute 'Git checkout ' . name
 endfunction
 
 function! s:call_fzf_changebranch()
-    call fzf#run({
-            \ 'source': 'git for-each-ref --sort=-committerdate --format="%(refname:short)" | grep -n . | sed "s?origin/??g" | sort -t: -k2 -u | sort -n | cut -d: -f2',
-            \ 'sink': function('s:changebranch')
-            \ })
+  call fzf#run({
+        \ 'source': 'git for-each-ref --sort=-committerdate --format="%(refname:short)" | grep -n . | sed "s?origin/??g" | sort -t: -k2 -u | sort -n | cut -d: -f2',
+        \ 'sink': function('s:changebranch')
+        \ })
 
 endfunction
 
 command! -bang Gbranch call s:call_fzf_changebranch()
 command! -bang Gb      call s:call_fzf_changebranch()
+command! -nargs=? Gco call s:changebranch("<args>")
 
-" Git push {{{
+" Git push + pull + autocmd {{{
 
-function! MosheGitPush() abort
-  echo "Pushing..."
+" Push
+function! s:MosheGitPush() abort
+  echo 'Pushing...'
   exe 'Git push -u origin ' . FugitiveHead()
-  echo "Pushed! 🤩"
+  echo 'Pushed! 🤩'
 endfunction
 
-command! Gp call MosheGitPush()
-nmap <silent> <leader>gp :call MosheGitPush()<cr>
-" }}}
+command! Gp call <sid>MosheGitPush()
+nmap <silent> <leader>gp :Gp<cr>
 
-" Git pull
-command! -bang Gl Git pull
+" Pull
+function! s:MosheGitPull() abort
+  echo 'Pulling...'
+  Git pull --quiet
+  echo 'Pulled! 😎'
+endfunction
+
+command! -bang Gl call <sid>MosheGitPull()
+nmap <silent> <leader>gl :Gl<cr>
+
+" Autocmd
+function! s:ftplugin_fugitive() abort
+  nnoremap <buffer> <silent> cc :Git commit --quiet<CR>
+  nnoremap <buffer> <silent> gl :Gl<CR>
+  nnoremap <buffer> <silent> gp :Gp<CR>
+endfunction
+augroup moshe_fugitive
+  autocmd!
+  autocmd FileType fugitive call s:ftplugin_fugitive()
+augroup END
+
+" }}}
 
 " Git merge origin master
 command! -bang Gmom G merge origin/master
 
 " Create a new branch
 function! Gcb(...)
-    let name = a:1
-    if name == ""
-        call inputsave()
-        let name = input('Enter branch name: ')
-        call inputrestore()
-    endif
-    execute "Git checkout -b " . name
+  let name = a:1
+  if name ==? ''
+    call inputsave()
+    let name = input('Enter branch name: ')
+    call inputrestore()
+  endif
+  execute 'Git checkout -b ' . name
 endfunction
 command! -nargs=? Gcb call Gcb("<args>")
 
@@ -529,103 +490,105 @@ nnoremap <leader>gh :0Glog<cr>
 
 
 function! ToggleGStatus()
-    if buflisted(bufname('.git/index'))
-        bd .git/index
-    else
-        Git
-    endif
+  if buflisted(bufname('.git/index'))
+    bd .git/index
+  else
+    Git
+    " 20wincmd_
+  endif
 endfunction
 command! ToggleGStatus :call ToggleGStatus()
 nnoremap <silent> <leader>gg :ToggleGStatus<cr>
 
 " Gdiffrev {{{
+nmap <leader>dh :DiffHistory<Space>
 command! DiffHistory call
 command! -nargs=? DiffHistory call s:view_git_history("<args>")
 
 function! s:view_git_history(...) abort
-    let branch_name = a:1
-    if branch_name != ""
-      execute "Git difftool --name-only " . branch_name . "...@"
-    else
-      Git difftool --name-only ! !^@
-    endif
-    call s:diff_current_quickfix_entry()
-    " Bind <CR> for current quickfix window to properly set up diff split layout after selecting an item
-    " There's probably a better way to map this without changing the window
-    copen
-    nnoremap <buffer> <CR> <CR><BAR>:call <sid>diff_current_quickfix_entry()<CR>
-    wincmd p
+  let branch_name = a:1
+  if branch_name !=? ''
+    execute 'Git difftool --name-only ' . branch_name . '...@'
+  else
+    Git difftool --name-only ! !^@
+  endif
+  call s:diff_current_quickfix_entry()
+  " Bind <CR> for current quickfix window to properly set up diff split layout after selecting an item
+  " There's probably a better way to map this without changing the window
+  copen
+  nnoremap <buffer> <CR> <CR><BAR>:call <sid>diff_current_quickfix_entry()<CR>
+  wincmd p
 endfunction
 
 function s:diff_current_quickfix_entry() abort
-    " Cleanup windows
-    for window in getwininfo()
-        if window.winnr !=? winnr() && bufname(window.bufnr) =~? '^fugitive:'
-            exe 'bdelete' window.bufnr
-        endif
-    endfor
-    cc
-    call s:add_mappings()
-    let qf = getqflist({'context': 0, 'idx': 0})
-    if get(qf, 'idx') && type(get(qf, 'context')) == type({}) && type(get(qf.context, 'items')) == type([])
-        let diff = get(qf.context.items[qf.idx - 1], 'diff', [])
-        echom string(reverse(range(len(diff))))
-        for i in reverse(range(len(diff)))
-            exe (i ? 'leftabove' : 'rightbelow') 'vert diffsplit' fnameescape(diff[i].filename)
-            call s:add_mappings()
-        endfor
+  " Cleanup windows
+  for window in getwininfo()
+    if window.winnr !=? winnr() && bufname(window.bufnr) =~? '^fugitive:'
+      exe 'bdelete' window.bufnr
     endif
+  endfor
+  cc
+  call s:add_mappings()
+  let qf = getqflist({'context': 0, 'idx': 0})
+  if get(qf, 'idx') && type(get(qf, 'context')) == type({}) && type(get(qf.context, 'items')) == type([])
+    let diff = get(qf.context.items[qf.idx - 1], 'diff', [])
+    echom string(reverse(range(len(diff))))
+    for i in reverse(range(len(diff)))
+      exe (i ? 'leftabove' : 'rightbelow') 'vert diffsplit' fnameescape(diff[i].filename)
+      call s:add_mappings()
+    endfor
+  endif
 endfunction
 
 function! s:add_mappings() abort
-    nnoremap <buffer>]q :cnext <BAR> :call <sid>diff_current_quickfix_entry()<CR>
-    nnoremap <buffer>[q :cprevious <BAR> :call <sid>diff_current_quickfix_entry()<CR>
-    " Reset quickfix height. Sometimes it messes up after selecting another item
-    11copen
-    wincmd p
+  nnoremap <buffer>]q :cnext <BAR> :call <sid>diff_current_quickfix_entry()<CR>
+  nnoremap <buffer>[q :cprevious <BAR> :call <sid>diff_current_quickfix_entry()<CR>
+  " Reset quickfix height. Sometimes it messes up after selecting another item
+  11copen
+  wincmd p
 endfunction
 " }}}
 
-" Set current working directory based on the file
-" autocmd BufEnter * silent! :lcd%:p:h
 " }}}
-
+"
 " }}}
 
 " Coc {{{
 
 " Plugins backup {{{
 let g:coc_global_extensions = [
-            \    "coc-cfn-lint",
-            \    "coc-css",
-            \    "coc-diagnostic",
-            \    "coc-dictionary",
-            \    "coc-docker",
-            \    "coc-emmet",
-            \    "coc-emoji",
-            \    "coc-eslint",
-            \    "coc-groovy",
-            \    "coc-html",
-            \    "coc-json",
-            \    "coc-markdownlint",
-            \    "coc-marketplace",
-            \    "coc-neosnippet",
-            \    "coc-pairs",
-            \    "coc-prettier",
-            \    "coc-python",
-            \    "coc-react-refactor",
-            \    "coc-scssmodules",
-            \    "coc-sh",
-            \    "coc-snippets",
-            \    "coc-styled-components",
-            \    "coc-swagger",
-            \    "coc-syntax",
-            \    "coc-tabnine",
-            \    "coc-tag",
-            \    "coc-tsserver",
-            \    "coc-vimlsp",
-            \    "coc-yaml"
-            \]
+      \    'coc-cfn-lint',
+      \    'coc-css',
+      \    'coc-diagnostic',
+      \    'coc-dictionary',
+      \    'coc-docker',
+      \    'coc-emmet',
+      \    'coc-emoji',
+      \    'coc-eslint',
+      \    'coc-groovy',
+      \    'coc-highlight',
+      \    'coc-html',
+      \    'coc-json',
+      \    'coc-markdownlint',
+      \    'coc-marketplace',
+      \    'coc-neosnippet',
+      \    'coc-pairs',
+      \    'coc-prettier',
+      \    'coc-python',
+      \    'coc-react-refactor',
+      \    'coc-scssmodules',
+      \    'coc-sh',
+      \    'coc-snippets',
+      \    'coc-styled-components',
+      \    'coc-swagger',
+      \    'coc-syntax',
+      \    'coc-tabnine',
+      \    'coc-tag',
+      \    'coc-tsserver',
+      \    'coc-vimlsp',
+      \    'coc-xml',
+      \    'coc-yaml'
+      \]
 " }}}
 
 " Install all plugins {{{
@@ -636,7 +599,7 @@ function! InstallAllCocExtensions() abort
   let counter = 0
   for extension in all_extensions
     if counter % iterator == 0
-      echom string(all_extensions[counter:counter+iterator-1])
+      echom string(all_extensions[counter : counter + iterator-1])
       call coc#util#install_extension([extension])
     endif
     let counter += 1
@@ -648,17 +611,16 @@ command! -bar -complete=custom,s:InstallOptions CocInstallAll
 
 " }}}
 
-
 " use <tab> for trigger completion and navigate to the next complete item {{{
 function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~? '\s'
 endfunction
 
 inoremap <silent><expr> <Tab>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<Tab>" :
-            \ coc#refresh()
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
 let g:coc_snippet_next = '<tab>'
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " }}}
@@ -670,9 +632,9 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
 if exists('*complete_info')
-    inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
-    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 " imap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :
 "       \"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
@@ -691,28 +653,30 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <leader>prn :CocSearch <C-R>=expand("<cword>")<CR><CR>
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" autocmd CursorHold * silent call CocActionAsync('highlight')
+hi CocHighlightText ctermbg=241 guibg=#665c54
+hi! link CocHoverRange CocHighlightText
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-augroup mygroup
-    autocmd!
-    " Setup formatexpr specified filetype(s).
-    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-    " Update signature help on jump placeholder.
-    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup format_coc_group
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    else
-        call CocAction('doHover')
-    endif
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
 endfunction
 
 " Use CTRL-S for selections ranges.
@@ -722,7 +686,7 @@ xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
-nmap <expr> <leader>p CocHasProvider('format') ? "\<Plug>(coc-format)" : ":call FormatEqual()\<cr>"
+nmap <silent><expr> <leader>p CocHasProvider('format') ? "\<Plug>(coc-format)" : ":call FormatEqual()\<cr>"
 
 " Add `:Fold` command to fold current buffer.
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
@@ -738,6 +702,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Mappings for CoCList
 " Show commands.
 nnoremap <silent><nowait> <leader>cc  :<C-u>CocList commands<cr>
+nnoremap <silent><nowait> <leader>a  :<C-u>CocAction<cr>
 " Search workspace symbols.
 " nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
@@ -750,13 +715,13 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 "
 " nnoremap <c-o> :NERDTreeToggle<cr>
 nnoremap <silent> <Leader>v :NERDTreeFind<CR>
-let g:NERDTreeChDirMode = 2
-let g:NERDTreeHijackNetrw=0
+let NERDTreeChDirMode = 2
+let NERDTreeHijackNetrw = 1
 " Show hidden files
 let NERDTreeShowHidden=1
-let g:NERDTreeDirArrowExpandable = '⇾'
-let g:NERDTreeDirArrowCollapsible = '⤓'
-let NERDTreeHighlightCursorline = 0
+" let NERDTreeDirArrowExpandable = '⇾'
+" let NERDTreeDirArrowCollapsible = '⤓'
+let NERDTreeHighlightCursorline = 1
 let g:NERDTreeGitStatusUseNerdFonts = 1
 " let g:NERDTreeGitStatusConcealBrackets = 1
 
@@ -765,69 +730,72 @@ let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {}
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['Jenkinsfile'] = ''
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['\..*ignore.*'] = ''
 
-let g:NERDTreePatternMatchHighlightColor = {}
-let g:NERDTreePatternMatchHighlightColor['\..*ignore.*'] = 'EE6E73'
-let g:NERDTreePatternMatchHighlightColor['Jenkinsfile'] = '62a2bf'
+" let g:NERDTreePatternMatchHighlightColor = {}
+" let g:NERDTreePatternMatchHighlightColor['\..*ignore.*'] = 'EE6E73'
+" let g:NERDTreePatternMatchHighlightColor['Jenkinsfile'] = '62a2bf'
 
 " If more than one window and previous buffer was NERDTree, go back to it.
 " autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr("$") > 1 | b# | endif
 
-" Close VIM if NERDTree is the only buffer left
-autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup nerd_tree_augroup
+  autocmd!
+  " Highlight currently open buffer in NERDTree
+  autocmd BufEnter * call SyncTree()
+  " Close VIM if NERDTree is the only buffer left
+  autocmd BufEnter * if (winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree()) | q | endif
+augroup END
 
 " Check if NERDTree is open or active
 function! IsNERDTreeOpen()
-    return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+  return exists('t:NERDTreeBufName') && (bufwinnr(t:NERDTreeBufName) != -1)
 endfunction
 
 " Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
 " file, and we're not in vimdiff
 function! SyncTree()
-    if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-        NERDTreeFind
-        wincmd p
-    endif
+  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+    wincmd p
+  endif
 endfunction
 
-" Highlight currently open buffer in NERDTree
-autocmd BufEnter * call SyncTree()
 
 function! ToggleNerdTree()
-    set eventignore=BufEnter
-    NERDTreeToggle
-    set eventignore=
+  set eventignore=BufEnter
+  NERDTreeToggle
+  set eventignore=
 endfunction
-nmap <C-o> :call ToggleNerdTree()<CR>
+nmap <silent> <C-o> :call ToggleNerdTree()<CR>
 
 function! ToggleNerdFugitiveVimStartup(timer)
-    let l:firstbuf = bufnr('%')
-    echom "firstbuf ". l:firstbuf
-    Git
-    let l:gitbuf = bufnr('%')
-    hide
-    call ToggleNerdTree()
-    new
-    exe 'buf' . l:gitbuf
-    set buflisted
-    let g:git_opened_by_func = 1
-    let l:winids = win_findbuf(l:firstbuf)
-    call win_gotoid(l:winids[0])
+  let l:firstbuf = bufnr('%')
+  echom 'firstbuf '. l:firstbuf
+  Git
+  let l:gitbuf = bufnr('%')
+  hide
+  call ToggleNerdTree()
+  new
+  exe 'buf' . l:gitbuf
+  set buflisted
+  let g:git_opened_by_func = 1
+  let l:winids = win_findbuf(l:firstbuf)
+  call win_gotoid(l:winids[0])
 endfunc
 
 function! CloseNERDGitWindows() abort
-    if buflisted(bufname('.git/index'))
-        buf .git/index
-        bd .git/index
-    endif
-    if (winnr("$") != 1) && exists(":NERDTreeClose")
-        NERDTreeClose
-    endif
+  if buflisted(bufname('.git/index'))
+    buf .git/index
+    bd .git/index
+  endif
+  if (winnr('$') != 1) && exists(':NERDTreeClose')
+    NERDTreeClose
+  endif
 endfunction
 
 " Reorganize all buffers
 function! ReorganizeAllWindows(timer)
-    call CloseNERDGitWindows()
-    call ToggleNerdFugitiveVimStartup("")
+  call CloseNERDGitWindows()
+  call ToggleNerdFugitiveVimStartup('')
 endfunction
 
 nnoremap <leader>ow :call ReorganizeAllWindows("")<cr>
